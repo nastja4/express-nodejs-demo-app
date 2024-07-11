@@ -1,70 +1,103 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 const Todo = require("../models/todo");
-const { validateFields } = require("../utils/functions");
+const { validateFields, getErrorMessage } = require("../utils/functions");
 
-const getTodos = async (req, res) => {
+const getTodos = async (req, res, next) => {
   try {
     const todos = await Todo.find({});
     res.send(todos);
   } catch (error) {
     console.log(error);
-    res.status(500).send();
+    next(
+      getErrorMessage({
+        message: "Error while getting list of todos. Try again later.",
+      })
+    );
   }
 };
 
-const addTodo = async (req, res) => {
+const addTodo = async (req, res, next) => {
   try {
     const areValidFields = validateFields(req.body);
     if (!areValidFields) {
-      return res
-        .status(400)
-        .send("Only valid fields to update: 'title', 'status'");
+      return next(
+        getErrorMessage({
+          status: 400,
+          message: "Only valid fields to update: 'title', 'status'",
+        })
+      );
     }
+
     const todo = new Todo(req.body);
     await todo.save();
     res.status(201).send();
   } catch (error) {
     console.log(error);
-    res.status(500).send();
+    next(
+      getErrorMessage({
+        message: "Error while adding list of todos. Try again later.",
+      })
+    );
   }
 };
 
-const updateTodo = async (req, res) => {
+const updateTodo = async (req, res, next) => {
   try {
     const isValidId = await Todo.findById(req.params.id);
     if (!isValidId) {
-      return res.status(400).send("Please enter valid todo id");
+      return next(
+        getErrorMessage({
+          status: 400,
+          message: "Please enter valid todo id",
+        })
+      );
     }
 
     const areValidFields = validateFields(req.body);
     if (!areValidFields) {
-      return res
-        .status(400)
-        .send("Only valid fields to update: 'title', 'status'");
+      return next(
+        getErrorMessage({
+          status: 400,
+          message: "Only valid fields to update: 'title', 'status'",
+        })
+      );
     }
     const updatedTodo = await Todo.findByIdAndUpdate(req.params.id, req.body, {
       runValidators: true,
       new: true,
     });
-    console.log("updatedTodo", updatedTodo);
     res.send(updatedTodo);
   } catch (error) {
-    res.status(500).send();
+    console.log(error);
+    next(
+      getErrorMessage({
+        message: "Error while updating list of todos. Try again later.",
+      })
+    );
   }
 };
 
-const deleteTodo = async (req, res) => {
+const deleteTodo = async (req, res, next) => {
   try {
     const isValidId = await Todo.findById(req.params.id);
     if (!isValidId) {
-      return res.status(400).send("Please enter valid todo id");
+      return next(
+        getErrorMessage({
+          status: 400,
+          message: "Please enter valid todo id",
+        })
+      );
     }
     const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
     res.send(deletedTodo);
   } catch (error) {
     console.log(error);
-    res.status(500).send();
+    next(
+      getErrorMessage({
+        message: "Error while deleting a todo. Try again later.",
+      })
+    );
   }
 };
 
