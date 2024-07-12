@@ -1,14 +1,17 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const { getErrorMessage } = require("../utils/functions");
+const jwt = require("jsonwebtoken"); // the User model's createToken method internally uses jsonwebtoken to create a JWT token.
 
 const addUser = async (req, res, next) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 8);
     const user = new User({ ...req.body, password: hashedPassword });
     await user.save();
-    return res.status(201).send(user);
+    const token = await user.createToken();
+    return res.status(201).send({ user, token });
   } catch (error) {
     console.log(error);
     next(
@@ -43,7 +46,9 @@ const authenticateUser = async (req, res, next) => {
         })
       );
     }
-    res.send(user);
+
+    const token = await user.createToken();
+    res.send({ user, token });
   } catch (error) {
     console.log(error);
     next(
