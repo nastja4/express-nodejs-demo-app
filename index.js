@@ -2,6 +2,7 @@
 /* eslint-disable no-undef */
 const express = require("express");
 const todoRoutes = require("./routes/todo");
+const userRoutes = require("./routes/user");
 require("./db");
 
 const PORT = process.env.PORT || 3030;
@@ -12,6 +13,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/api/todos", todoRoutes);
+app.use("/api/users", userRoutes);
 
 // Make sure this error handler middleware is added after all routes of the app
 app.use((error, req, res, next) => {
