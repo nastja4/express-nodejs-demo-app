@@ -19,6 +19,14 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+// to exclude certain fields (the password) from the JSON representation of all documents created from that schema that are sent to clients
+UserSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject(); // method provided by Mongoose that converts the Mongoose document into a plain JavaScript object
+  delete userObject.password; // deleteng a sensitive info
+  return userObject;
+};
+
 const User = mongoose.model("User", UserSchema);
 
 module.exports = User;

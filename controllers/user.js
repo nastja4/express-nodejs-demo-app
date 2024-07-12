@@ -19,4 +19,39 @@ const addUser = async (req, res, next) => {
   }
 };
 
-module.exports = { addUser };
+const authenticateUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({
+      email,
+    });
+    if (!user) {
+      return next(
+        getErrorMessage({
+          status: 404,
+          message: "User with the provided email not found.",
+        })
+      );
+    }
+    const isMatching = await bcrypt.compare(password, user.password);
+    console.log("isMatching", isMatching);
+    if (!isMatching) {
+      return next(
+        getErrorMessage({
+          status: 400,
+          message: "Invalid credentials.",
+        })
+      );
+    }
+    res.send(user);
+  } catch (error) {
+    console.log(error);
+    next(
+      getErrorMessage({
+        message: "Error while authenticating user. Try again later.",
+      })
+    );
+  }
+};
+
+module.exports = { addUser, authenticateUser };
