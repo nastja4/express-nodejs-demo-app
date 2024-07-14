@@ -39,9 +39,10 @@ UserSchema.methods.toJSON = function () {
 UserSchema.methods.createToken = async function () {
   try {
     const user = this;
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY);
+    // jwt.sign(payload, secretOrPrivateKey) is a method from the jsonwebtoken library that generates a signed JWT
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY); // a secret key used to sign the token
     console.log(token);
-    user.tokens = user.tokens.concat({ token });
+    user.tokens = user.tokens.concat({ token }); // adds the newly generated token to the tokens array
     await user.save();
     return token;
   } catch (error) {
