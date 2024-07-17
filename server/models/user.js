@@ -33,6 +33,7 @@ UserSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject(); // method provided by Mongoose that converts the Mongoose document into a plain JavaScript object
   delete userObject.password; // deleteng a sensitive info
+  delete userObject.tokens;
   return userObject;
 };
 
