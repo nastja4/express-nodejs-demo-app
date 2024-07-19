@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-unescaped-entities */
 import { Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,7 +7,7 @@ import axios from "axios";
 import { BASE_API_URL } from "../../utils/constants";
 import "./login.scss";
 
-const Login = () => {
+const Login = ({ setUser }) => {
   const navigate = useNavigate();
   const [state, setState] = useState({
     email: "",
@@ -39,6 +40,7 @@ const Login = () => {
           state
         );
         console.log(data);
+        setUser(data);
         navigate("/");
       } catch (error) {
         setSubmitting(false);

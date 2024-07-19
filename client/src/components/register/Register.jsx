@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -5,7 +6,7 @@ import axios from "axios";
 import "./register.scss";
 import { BASE_API_URL } from "../../utils/constants";
 
-const Register = () => {
+const Register = ({ setUser }) => {
   const navigate = useNavigate();
   const [state, setState] = useState({
     username: "",
@@ -43,6 +44,7 @@ const Register = () => {
           name: state.username,
         });
         console.log(data);
+        setUser(data);
         navigate("/");
       } catch (error) {
         setSubmitting(false);
