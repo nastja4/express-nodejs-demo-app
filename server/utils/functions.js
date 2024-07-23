@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const validateFields = (body) => {
-  const requiredFields = ["title", "status"];
+  const requiredFields = ["title", "status", "owner"];
   const receivedFields = Object.keys(body);
 
   const areValidFields = receivedFields.every((field) => {
