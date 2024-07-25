@@ -27,6 +27,7 @@ const Dashboard = ({ userInfo }) => {
     };
     getTodos();
   }, []);
+
   return (
     <div className="dashboard">
       <h2 className="heading">List of Todos</h2>

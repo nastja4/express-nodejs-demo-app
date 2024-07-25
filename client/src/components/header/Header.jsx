@@ -24,10 +24,8 @@ const Header = ({ userInfo, logoutUser }) => {
                 </Link>
               )}
               {!userInfo && (
+                //  React.Fragment - only the Link component is rendered without any additional HTML element
                 <React.Fragment>
-                  <Link to="/login" className="nav-link">
-                    Login
-                  </Link>
                   <Link to="/register" className="nav-link">
                     Register
                   </Link>
